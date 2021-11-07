@@ -12,13 +12,37 @@
         <!-- Styles -->
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <script src="{{ asset('js/app.js') }}"></script>
+
+        <style>
+            .other::before {
+                content: "";
+                position: absolute;
+                top: 90%;
+                left: -15px;
+                margin-top: -30px;
+                border: 5px solid transparent;
+                border-right: 15px solid #c7deff;
+            }
+
+            .self::after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 100%;
+                margin-top: -15px;
+                border: 3px solid transparent;
+                border-left: 9px solid #c7deff;
+            }
+        </style>
     </head>
     <body class="w-4/5 md:w-3/5 lg:w-2/5 m-auto">
         <h1 class="my-4 text-3xl font-bold">{{env('APP_NAME')}}</h1>
-        <div class="my-4 p-4 rounded-lg bg-blue-200">
             <ul>
                 @foreach ($chats as $chat)
-                    <li class="truncate">{{$chat->getData()}}</li>
+                    <p class="text-xs @if($chat->user_name == 'DaiNaka') text-right @endif">{{$chat->created_at}} ＠{{$chat->user_name}}</p>
+                    <li class="w-max mb-3 p-2 rounded-lg bg-blue-200 relative @if($chat->user_name == 'DaiNaka') self ml-auto @else other @endif">
+                        {{$chat->message}}
+                    </li>
                 @endforeach
             </ul>
         </div>
