@@ -18,7 +18,8 @@ class CreateChatsTable extends Migration
             $table->string('user_name', 20)->default('noname');
             $table->string('user_identifier', 20);
             $table->string('message', 200);
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent()->nullable();
+            $table->timestamp('updated_at')->useCurrent()->nullable();
         });
     }
 
