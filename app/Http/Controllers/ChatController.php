@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Models\Chat;
 
 class ChatController extends Controller
@@ -12,8 +13,13 @@ class ChatController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+
+        // ユーザーIDをセッションに登録
+        $user_identifier = $request->session()->get('user_identifier', Str::random(20));
+        session(['user_identifier' => $user_identifier]);
+        
         // データーベースの件数を取得
         $length = Chat::all()->count();
 
@@ -21,7 +27,7 @@ class ChatController extends Controller
         $display = 5;
 
         $chats = Chat::offset($length-$display)->limit($display)->get();
-        return view('chat/index',compact('chats'));
+        return view('chat/index',compact('chats','user_identifier'));
     }
 
     /**
