@@ -14,6 +14,7 @@
         <script src="{{ asset('js/app.js') }}"></script>
 
         <style>
+            /* 他人のコメントの吹き出し */
             .other::before {
                 content: "";
                 position: absolute;
@@ -24,6 +25,7 @@
                 border-right: 15px solid #c7deff;
             }
 
+            /* 自身のコメントの吹き出し */
             .self::after {
                 content: "";
                 position: absolute;
@@ -36,8 +38,10 @@
         </style>
     </head>
     <body class="w-4/5 md:w-3/5 lg:w-2/5 m-auto">
+        {{-- アプリのタイトル（.envに設定されているアプリ名を取得） --}}
         <h1 class="my-4 text-3xl font-bold">{{env('APP_NAME')}}</h1>
             <ul>
+                {{-- チャットデータを繰り返し表示 --}}
                 @foreach ($chats as $chat)
                     <p class="text-xs @if($chat->user_identifier == session('user_identifier')) text-right @endif">{{$chat->created_at}} ＠{{$chat->user_name}}</p>
                     <li class="w-max mb-3 p-2 rounded-lg bg-blue-200 relative @if($chat->user_identifier == session('user_identifier')) self ml-auto @else other @endif">
@@ -46,12 +50,18 @@
                 @endforeach
             </ul>
         </div>
+
+        {{-- 入力フォーム --}}
         <form class="my-4 py-2 px-4 rounded-lg bg-gray-300 text-sm flex flex-col md:flex-row flex-grow" action="/chat" method="POST">
             @csrf
-            <input type="hidden" name="user_identifier" value={{$user_identifier}}>
-            <input class="py-1 px-2 rounded text-center flex-initial" type="text" name="user_name" placeholder="UserName" maxlength="20" value="{{$user_name}}">
-            <input class="mt-2 md:mt-0 md:ml-2 py-1 px-2 rounded flex-auto" type="text" name="message" placeholder="Input message." maxlength="200" autofocus>
-            <button class="mt-2 md:mt-0 md:ml-2 py-1 px-2 rounded text-center bg-gray-500 text-white" type="submit">Send</button>
+            {{-- ユーザー識別子を隠しパラメータで保有 --}}
+            <input type="hidden" name="user_identifier" value={{session('user_identifier')}}>
+            {{-- ユーザー名フォーム --}}
+            <input class="py-1 px-2 rounded text-center flex-initial" type="text" name="user_name" placeholder="UserName" maxlength="20" value="{{session('user_name')}}" required>
+            {{-- メッセージフォーム --}}
+            <input class="mt-2 md:mt-0 md:ml-2 py-1 px-2 rounded flex-auto" type="text" name="message" placeholder="Input message." maxlength="200" autofocus required>
+            {{-- 送信ボタン --}}
+            <button class="mt-2 md:mt-0 md:ml-2 py-1 px-2 rounded text-center bg-gray-500 text-white" type="submit">送信</button>
         </form>
     </body>
 </html>

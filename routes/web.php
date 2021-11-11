@@ -14,10 +14,5 @@ use App\Http\Controllers\ChatController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
 Route::redirect('/', '/chat');
-
 Route::resource('/chat', ChatController::class);
