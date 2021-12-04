@@ -21,7 +21,7 @@ class ChatController extends Controller
         $length = Chat::all()->count();
 
         // 画面に表示する件数を代入
-        $display = 5;
+        $display = 20;
 
         // 最新のチャットを画面に表示する分だけ取得して変数に代入
         $chats = Chat::offset($length-$display)->limit($display)->get();
