@@ -27,7 +27,7 @@ class ChatController extends Controller
         $chats = Chat::offset($length-$display)->limit($display)->get();
 
         // チャットデータをビューに渡して表示
-        return view('chat/index',compact('chats'));
+        return view('chat.index',compact('chats'));
     }
 
     public function store(Request $request)
