@@ -44,7 +44,7 @@
                 {{-- チャットデータを繰り返し表示 --}}
                 @foreach ($chats as $chat)
                     <p class="text-xs @if($chat->user_identifier == Cache::get('user_identifier')) text-right @endif">{{$chat->created_at}} ＠{{$chat->user_name}}</p>
-                    <li class="w-max mb-3 p-2 rounded-lg bg-blue-200 relative @if($chat->user_identifier == Cache::get('user_identifier')) self ml-auto @else other @endif">
+                    <li class="w-max max-w-full break-words mb-3 p-2 rounded-lg bg-blue-200 relative @if($chat->user_identifier == Cache::get('user_identifier')) self ml-auto @else other @endif">
                         {{$chat->message}}
                     </li>
                 @endforeach
