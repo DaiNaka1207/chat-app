@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use App\Models\Chat;
 
@@ -10,12 +11,11 @@ class ChatController extends Controller
 {
     public function index(Request $request)
     {
-
-        // ユーザー識別子がなければランダムに生成してセッションに登録
-        if($request->session()->missing('user_identifier')){ session(['user_identifier' => Str::random(20)]); }
-
-        // ユーザー名を変数に登録（デフォルト値：Guest）
-        if($request->session()->missing('user_name')){ session(['user_name' => 'Guest']); }
+        // ユーザー識別子をキャッシュに登録（なければランダムに生成）
+        if (!Cache::has('user_identifier')) { Cache::put('user_identifier', Str::random(20)); }
+        
+        // ユーザー名をキャッシュに登録（デフォルト値：Guest）
+        if (!Cache::has('user_name')) { Cache::put('user_name', 'Guest'); }
         
         // データーベースの件数を取得
         $length = Chat::all()->count();
@@ -32,8 +32,8 @@ class ChatController extends Controller
 
     public function store(Request $request)
     {
-        // フォームに入力されたユーザー名をセッションに登録
-        session(['user_name' => $request->user_name]);
+        // フォームに入力されたユーザー名をキャッシュに登録
+        Cache::put('user_name', $request->user_name);
 
         // フォームに入力されたチャットデータをデータベースに登録
         $chat = new Chat;
