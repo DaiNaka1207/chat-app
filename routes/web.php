@@ -15,4 +15,6 @@ use App\Http\Controllers\ChatController;
 */
 
 Route::redirect('/', '/chat');
-Route::resource('/chat', ChatController::class);
+Route::resource('/chat', ChatController::class)->only([
+    'index', 'store'
+]);
