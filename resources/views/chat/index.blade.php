@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{{env('APP_NAME')}}</title>
+        <title>{{config('app.name')}}</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -39,7 +39,7 @@
     </head>
     <body class="w-4/5 md:w-3/5 lg:w-2/5 m-auto">
         {{-- アプリのタイトル（.envに設定されているアプリ名を取得） --}}
-        <h1 class="my-4 text-3xl font-bold">{{env('APP_NAME')}}</h1>
+        <h1 class="my-4 text-3xl font-bold">{{config('app.name')}}</h1>
             <ul>
                 {{-- チャットデータを繰り返し表示 --}}
                 @foreach ($chats as $chat)
