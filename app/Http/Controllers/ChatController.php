@@ -4,18 +4,30 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cookie;
 use App\Models\Chat;
-use Illuminate\Support\Facades\Cache;
 
 class ChatController extends Controller
 {
     public function index(Request $request)
     {
-        // ユーザー識別子をキャッシュに登録（なければランダムに生成）
-        Cache::add('user_identifier', Str::random(20));
-        
-        // ユーザー名をキャッシュに登録（デフォルト値：Guest）
-        Cache::add('user_name', 'Guest');
+        // Cookieを変数に読み込み
+        $user = [
+            'name' => $request->cookie('chat-app_name'),
+            'identifier' => $request->cookie('chat-app_identifier'),
+        ];
+
+        // Cookieが存在しなければデフォルト値を設定
+        if ($user['name'] === null) {
+            
+            $user = [
+                'name' => 'Guest',
+                'identifier' => Str::random(20),
+            ];
+
+            Cookie::queue('chat-app_name', $user['name']);
+            Cookie::queue('chat-app_identifier', $user['identifier']);
+        }
 
         // データーベースの件数を取得
         $length = Chat::all()->count();
@@ -27,13 +39,13 @@ class ChatController extends Controller
         $chats = Chat::offset($length-$display)->limit($display)->get();
 
         // チャットデータをビューに渡して表示
-        return view('chat.index',compact('chats'));
+        return view('chat.index', compact('chats', 'user'));
     }
 
     public function store(Request $request)
     {
-        // フォームに入力されたユーザー名をキャッシュに登録
-        Cache::put('user_name', $request->user_name);
+        // フォームに入力されたユーザー名をCookieに登録
+        Cookie::queue('chat-app_name', $request->user_name);
 
         // フォームに入力されたチャットデータをデータベースに登録
         $chat = new Chat;

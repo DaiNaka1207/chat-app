@@ -10,7 +10,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
         <!-- Styles -->
-        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        <link href="{{ asset('/css/app.css') }}" rel="stylesheet">
         <script src="{{ asset('js/app.js') }}"></script>
 
         <style>
@@ -43,8 +43,8 @@
             <ul>
                 {{-- チャットデータを繰り返し表示 --}}
                 @foreach ($chats as $chat)
-                    <p class="text-xs @if($chat->user_identifier == cache('user_identifier')) text-right @endif">{{$chat->created_at}} ＠{{$chat->user_name}}</p>
-                    <li class="w-max max-w-full break-words mb-3 p-2 rounded-lg bg-blue-200 relative @if($chat->user_identifier == cache('user_identifier')) self ml-auto @else other @endif">
+                    <li class="text-xs @if($chat->user_identifier == $user['identifier']) text-right @endif">{{$chat->created_at}} ＠{{$chat->user_name}}</li>
+                    <li class="w-max max-w-full break-words mb-3 p-2 rounded-lg bg-blue-200 relative @if($chat->user_identifier == $user['identifier']) self ml-auto @else other @endif">
                         {{$chat->message}}
                     </li>
                 @endforeach
@@ -55,13 +55,14 @@
         <form class="my-4 py-2 px-4 rounded-lg bg-gray-300 text-sm flex flex-col md:flex-row flex-grow" action="/chat" method="POST">
             @csrf
             {{-- ユーザー識別子を隠しパラメータで保有 --}}
-            <input type="hidden" name="user_identifier" value={{cache('user_identifier')}}>
+            <input type="hidden" name="user_identifier" value={{$user['identifier']}}>
             {{-- ユーザー名フォーム --}}
-            <input class="py-1 px-2 rounded text-center flex-initial" type="text" name="user_name" placeholder="UserName" maxlength="20" value={{cache('user_name')}} required>
+            <input class="py-1 px-2 rounded text-center flex-initial" type="text" name="user_name" placeholder="UserName" maxlength="20" value="{{$user['name']}}" required>
             {{-- メッセージフォーム --}}
             <input class="mt-2 md:mt-0 md:ml-2 py-1 px-2 rounded flex-auto" type="text" name="message" placeholder="Input message." maxlength="200" autofocus required>
             {{-- 送信ボタン --}}
             <button class="mt-2 md:mt-0 md:ml-2 py-1 px-2 rounded text-center bg-gray-500 text-white" type="submit">送信</button>
         </form>
+
     </body>
 </html>
