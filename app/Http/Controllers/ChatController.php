@@ -13,8 +13,8 @@ class ChatController extends Controller
     {
         // Cookieを変数に読み込み
         $user = [
-            'name' => $request->cookie('chat-app_name'),
-            'identifier' => $request->cookie('chat-app_identifier'),
+            'name' => Cookie::get('chat-app_name'),
+            'identifier' => Cookie::get('chat-app_identifier'),
         ];
 
         // Cookieが存在しなければデフォルト値を設定
@@ -25,8 +25,8 @@ class ChatController extends Controller
                 'identifier' => Str::random(20),
             ];
 
-            Cookie::queue('chat-app_name', $user['name']);
-            Cookie::queue('chat-app_identifier', $user['identifier']);
+            Cookie::queue(Cookie::forever('chat-app_name', $user['name']));
+            Cookie::queue(Cookie::forever('chat-app_identifier', $user['identifier']));
         }
 
         // データーベースの件数を取得
@@ -45,7 +45,7 @@ class ChatController extends Controller
     public function store(Request $request)
     {
         // フォームに入力されたユーザー名をCookieに登録
-        Cookie::queue('chat-app_name', $request->user_name);
+        Cookie::queue(Cookie::forever('chat-app_name', $request->user_name));
 
         // フォームに入力されたチャットデータをデータベースに登録
         $chat = new Chat;

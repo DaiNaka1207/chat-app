@@ -12,6 +12,6 @@ class EncryptCookies extends Middleware
      * @var array
      */
     protected $except = [
-        //
+        'chat-app_name', 'chat-app_identifier'
     ];
 }
